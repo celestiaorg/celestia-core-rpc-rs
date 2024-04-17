@@ -1,5 +1,4 @@
 [![Crate][crate-image]][crate-link]
-[![Docs][docs-image]][docs-link]
 
 # celestia-core-rpc-rs
 
@@ -11,10 +10,8 @@ dependencies small in cases where only the core types are needed.
 
 [//]: # (badges)
 
-[crate-image]: https://img.shields.io/crates/v/tendermint-rpc.svg
-[crate-link]: https://crates.io/crates/tendermint-rpc
-[docs-image]: https://docs.rs/tendermint-rpc/badge.svg
-[docs-link]: https://github.com/celestiaorg/celestia-core/tree/main/docs
+[crate-image]: https://img.shields.io/crates/v/celestia-core-rpc.svg
+[crate-link]: https://crates.io/crates/celestia-core-rpc
 
 [//]: # (general links)
 

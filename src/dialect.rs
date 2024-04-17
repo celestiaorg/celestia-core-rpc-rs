@@ -15,7 +15,7 @@ pub use end_block::EndBlock;
 
 use serde::{de::DeserializeOwned, Serialize};
 
-use tendermint::{abci, evidence};
+use celestia_core::{abci, evidence};
 
 pub trait Dialect: sealed::Sealed + Default + Clone + Send + Sync {
     type Event: Into<abci::Event> + Serialize + DeserializeOwned;

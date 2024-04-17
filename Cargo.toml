@@ -47,7 +47,7 @@ http-client = [
   "tokio/macros",
   "tracing"
 ]
-secp256k1 = [ "tendermint/secp256k1" ]
+secp256k1 = [ "celestia-core/secp256k1" ]
 websocket-client = [
   "async-tungstenite",
   "futures",
@@ -61,7 +61,7 @@ websocket-client = [
 ]
 
 [dependencies]
-tendermint = { version = "0.34.0", default-features = false, path = "./tendermint"}
+celestia-core = { version = "0.34.0", default-features = false, path = "./tendermint"}
 tendermint-config = { version = "0.34.0",  default-features = false }
 celestia-core-proto = { version = "0.34.0", default-features = false}
 

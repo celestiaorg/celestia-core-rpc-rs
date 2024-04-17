@@ -1,8 +1,8 @@
 //! `/tx` endpoint JSON-RPC wrapper
 
+use celestia_core::{abci, block, tx, Hash};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
-use tendermint::{abci, block, tx, Hash};
 
 use crate::dialect::{DeliverTx, Dialect};
 use crate::{prelude::*, request::RequestMessage, serializers, Method};

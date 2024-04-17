@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -9,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.32.1](https://github.com/eigerco/celestia-tendermint-rs/compare/celestia-tendermint-proto-v0.32.0...celestia-tendermint-proto-v0.32.1) - 2024-01-15
 
 ### Other
+
 - fully specify homepage url in metadata ([#27](https://github.com/eigerco/celestia-tendermint-rs/pull/27))
 - align authors, repository and homepage keys ([#25](https://github.com/eigerco/celestia-tendermint-rs/pull/25))
 
@@ -17,20 +19,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 
 ### Added
+
 - *(proto)* allow serialization of Event ([#9](https://github.com/eigerco/celestia-tendermint-rs/pull/9))
 - use protobuffers from celestia-core ([#1](https://github.com/eigerco/celestia-tendermint-rs/pull/1))
 
 ### Fixed
+
 - *(proto)* wrap values in options in bytes serializers ([#12](https://github.com/eigerco/celestia-tendermint-rs/pull/12))
 - *(celestia)* commit height serialization as number
 
 ### Other
+
 - pre-release cleanups ([#16](https://github.com/eigerco/celestia-tendermint-rs/pull/16))
 - update prost to 0.12.0
 - remove unneded clones in proto encoding
 - Remove unneeded allocations in serializers ([#6](https://github.com/eigerco/celestia-tendermint-rs/pull/6))
 
 ### Other - inherited
+
 - Prepare release for v0.32.0 ([#1314](https://github.com/informalsystems/tendermint-rs/pull/1314))
 - Attack detector and evidence reporting ([#1292](https://github.com/informalsystems/tendermint-rs/pull/1292))
 - Prepare release v0.31.1 ([#1298](https://github.com/informalsystems/tendermint-rs/pull/1298))
@@ -81,7 +87,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Use `core` and `alloc` crates for `no_std` compatibility (Take 2) ([#993](https://github.com/informalsystems/tendermint-rs/pull/993))
 - Update to official Prost v0.9 ([#1011](https://github.com/informalsystems/tendermint-rs/pull/1011))
 - Bump version to 0.23.0-internal ([#1009](https://github.com/informalsystems/tendermint-rs/pull/1009))
-- Move out `tendermint::config` to `tendermint-config` crate ([#986](https://github.com/informalsystems/tendermint-rs/pull/986))
+- Move out `celestia_core::config` to `tendermint-config` crate ([#986](https://github.com/informalsystems/tendermint-rs/pull/986))
 - Adopt forked prost crates ([#1005](https://github.com/informalsystems/tendermint-rs/pull/1005))
 - Use chrono::DateTime instead of std::time::SystemTime ([#994](https://github.com/informalsystems/tendermint-rs/pull/994))
 - Release v0.22.0 ([#987](https://github.com/informalsystems/tendermint-rs/pull/987))
@@ -101,7 +107,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Release v0.18.0 ([#796](https://github.com/informalsystems/tendermint-rs/pull/796))
 - Update Tokio to 1.0, Hyper to 0.14, Prost to 0.7 and Bytes to 1.0 ([#783](https://github.com/informalsystems/tendermint-rs/pull/783))
 - Release v0.17.1 ([#778](https://github.com/informalsystems/tendermint-rs/pull/778))
-- Fix formatting of tendermint::Time ([#775](https://github.com/informalsystems/tendermint-rs/pull/775))
+- Fix formatting of celestia_core::Time ([#775](https://github.com/informalsystems/tendermint-rs/pull/775))
 - Release v0.17.0 ([#751](https://github.com/informalsystems/tendermint-rs/pull/751))
 - Add support for consensus_state endpoint ([#719](https://github.com/informalsystems/tendermint-rs/pull/719))
 - Final protobuf for 0.17.0 / Go 0.34.0 ([#737](https://github.com/informalsystems/tendermint-rs/pull/737))

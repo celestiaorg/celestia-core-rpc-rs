@@ -1,7 +1,7 @@
 //! `/data_root_inclusion_proof` endpoint JSON-RPC wrapper
 
+use celestia_core::merkle;
 use serde::{Deserialize, Serialize};
-use tendermint::merkle;
 
 use crate::prelude::*;
 use crate::{dialect::Dialect, request::RequestMessage, serializers};

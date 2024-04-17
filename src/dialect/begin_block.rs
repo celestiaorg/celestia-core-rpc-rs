@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use tendermint::abci;
+use celestia_core::abci;
 
 use crate::prelude::*;
 

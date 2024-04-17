@@ -1,7 +1,7 @@
 //! `/header` endpoint JSON-RPC wrapper
 
+use celestia_core::block::{self, Header};
 use serde::{Deserialize, Serialize};
-use tendermint::block::{self, Header};
 
 use crate::dialect::v0_34;
 use crate::request::RequestMessage;

@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 use tokio::time::{Duration, Instant};
 use tracing::{debug, error};
 
-use tendermint::{block::Height, Hash};
+use celestia_core::{block::Height, Hash};
 use tendermint_config::net;
 
 use super::router::{SubscriptionId, SubscriptionIdRef};
@@ -97,7 +97,7 @@ pub use async_tungstenite::tungstenite::protocol::WebSocketConfig;
 /// ## Examples
 ///
 /// ```rust,ignore
-/// use tendermint::abci::Transaction;
+/// use celestia_core::abci::Transaction;
 /// use tendermint_rpc::{WebSocketClient, SubscriptionClient, Client};
 /// use tendermint_rpc::query::EventType;
 /// use futures::StreamExt;
@@ -258,7 +258,7 @@ impl Client for WebSocketClient {
                     .perform_v0_34(endpoint::block::Request::new(height))
                     .await?;
                 Ok(resp.into())
-            },
+            }
         }
     }
 
@@ -270,7 +270,7 @@ impl Client for WebSocketClient {
             CompatMode::V0_37 => {
                 self.perform(endpoint::header_by_hash::Request::new(hash))
                     .await
-            },
+            }
             CompatMode::V0_34 => {
                 // Back-fill with a request to /block_by_hash endpoint and
                 // taking just the header from the response.
@@ -278,7 +278,7 @@ impl Client for WebSocketClient {
                     .perform_v0_34(endpoint::block_by_hash::Request::new(hash))
                     .await?;
                 Ok(resp.into())
-            },
+            }
         }
     }
 
@@ -903,7 +903,7 @@ impl WebSocketClientDriver {
                 debug!("JSON-RPC message: {}", msg);
 
                 return Ok(());
-            },
+            }
         };
 
         debug!("Generic JSON-RPC message: {:?}", wrapper);
@@ -973,7 +973,7 @@ impl WebSocketClientDriver {
                     (cmd.id, cmd.query, cmd.subscription_tx, cmd.response_tx);
                 self.router.add(id, query, subscription_tx);
                 response_tx.send(Ok(()))
-            },
+            }
             DriverCommand::Unsubscribe(cmd) => cmd.response_tx.send(Ok(())),
             DriverCommand::SimpleRequest(cmd) => cmd.response_tx.send(Ok(response)),
             _ => Ok(()),
@@ -1216,11 +1216,11 @@ mod test {
                 CompatMode::V0_37 => {
                     let ev: DialectEvent<dialect::v0_37::Event> = ev.into();
                     self.send(subs_id, ev).await;
-                },
+                }
                 CompatMode::V0_34 => {
                     let ev: DialectEvent<dialect::v0_34::Event> = ev.into();
                     self.send(subs_id, ev).await;
-                },
+                }
             }
         }
 
@@ -1230,11 +1230,11 @@ mod test {
                 Message::Ping(v) => {
                     let _ = self.conn.send(Message::Pong(v)).await;
                     None
-                },
+                }
                 Message::Close(_) => {
                     self.terminate().await;
                     Some(Ok(()))
-                },
+                }
                 _ => None,
             }
         }
@@ -1256,7 +1256,7 @@ mod test {
                                         req.id().to_string(),
                                     );
                                     self.send(req.id().clone(), subscribe::Response {}).await;
-                                },
+                                }
                                 Method::Unsubscribe => {
                                     let req = serde_json::from_str::<
                                         request::Wrapper<unsubscribe::Request>,
@@ -1265,22 +1265,22 @@ mod test {
 
                                     self.remove_subscription(req.params().query.clone());
                                     self.send(req.id().clone(), unsubscribe::Response {}).await;
-                                },
+                                }
                                 _ => {
                                     println!("Unsupported method in incoming request: {}", &method);
-                                },
+                                }
                             },
                             Err(e) => {
                                 println!(
                                     "Unexpected method in incoming request: {json_method} ({e})"
                                 );
-                            },
+                            }
                         }
                     }
-                },
+                }
                 Err(e) => {
                     println!("Failed to parse incoming request: {} ({})", &msg, e);
-                },
+                }
             }
             None
         }

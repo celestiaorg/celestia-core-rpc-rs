@@ -2,8 +2,8 @@
 
 use core::ops::Range;
 
+use celestia_core::block;
 use serde::{Deserialize, Serialize};
-use tendermint::block;
 
 use crate::prelude::*;
 use crate::{dialect::Dialect, request::RequestMessage};

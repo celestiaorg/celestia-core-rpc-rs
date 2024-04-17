@@ -1,8 +1,8 @@
 //! `/block_results` endpoint JSON-RPC wrapper
 
+use celestia_core::{abci, block, consensus, validator};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
-use tendermint::{abci, block, consensus, validator};
 
 use crate::dialect::{self, Dialect};
 use crate::prelude::*;

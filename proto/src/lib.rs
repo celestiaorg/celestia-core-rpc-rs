@@ -25,9 +25,9 @@ mod tendermint;
 use core::{convert::Infallible, convert::TryFrom, fmt::Display};
 
 use bytes::{Buf, BufMut};
+pub use celestia_core::*;
 pub use error::Error;
 use prost::Message;
-pub use tendermint::*;
 
 pub mod serializers;
 

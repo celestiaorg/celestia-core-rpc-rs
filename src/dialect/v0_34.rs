@@ -1,5 +1,5 @@
+use celestia_core::{abci, evidence};
 use celestia_core_proto::v0_34::types::Evidence as RawEvidence;
-use tendermint::{abci, evidence};
 
 use crate::prelude::*;
 use crate::serializers::bytes::base64string;

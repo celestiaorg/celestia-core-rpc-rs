@@ -1,7 +1,7 @@
 //! `/abci_query` endpoint JSON-RPC wrapper
 
+use celestia_core::{abci::Code, block, merkle::proof::ProofOps, serializers};
 use serde::{Deserialize, Serialize};
-use tendermint::{abci::Code, block, merkle::proof::ProofOps, serializers};
 
 use crate::prelude::*;
 use crate::{dialect::Dialect, request::RequestMessage};

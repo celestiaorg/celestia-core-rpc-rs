@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use tendermint::{abci, consensus, validator};
+use celestia_core::{abci, consensus, validator};
 
 use crate::prelude::*;
 use crate::serializers;

@@ -7,7 +7,7 @@ use core::{
 
 use async_trait::async_trait;
 
-use tendermint::{block::Height, evidence::Evidence, Hash};
+use celestia_core::{block::Height, evidence::Evidence, Hash};
 use tendermint_config::net;
 
 use crate::prelude::*;
@@ -195,7 +195,7 @@ impl Client for HttpClient {
                     .perform_v0_34(endpoint::block::Request::new(height))
                     .await?;
                 Ok(resp.into())
-            },
+            }
         }
     }
 
@@ -207,7 +207,7 @@ impl Client for HttpClient {
             CompatMode::V0_37 => {
                 self.perform(endpoint::header_by_hash::Request::new(hash))
                     .await
-            },
+            }
             CompatMode::V0_34 => {
                 // Back-fill with a request to /block_by_hash endpoint and
                 // taking just the header from the response.
@@ -215,7 +215,7 @@ impl Client for HttpClient {
                     .perform_v0_34(endpoint::block_by_hash::Request::new(hash))
                     .await?;
                 Ok(resp.into())
-            },
+            }
         }
     }
 
@@ -226,7 +226,7 @@ impl Client for HttpClient {
             CompatMode::V0_34 => {
                 self.perform_v0_34(endpoint::evidence::Request::new(e))
                     .await
-            },
+            }
         }
     }
 

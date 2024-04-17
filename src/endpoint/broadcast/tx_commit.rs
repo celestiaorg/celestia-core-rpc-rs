@@ -4,7 +4,7 @@
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 
-use tendermint::{abci, block, Hash};
+use celestia_core::{abci, block, Hash};
 
 use crate::dialect::{self, Dialect};
 use crate::{prelude::*, request::RequestMessage, serializers};

@@ -2,7 +2,7 @@
 
 use core::fmt;
 
-use tendermint::Version;
+use celestia_core::Version;
 
 use crate::prelude::*;
 use crate::Error;
@@ -67,7 +67,7 @@ impl fmt::Display for CompatMode {
 mod tests {
     use super::CompatMode;
     use crate::prelude::*;
-    use tendermint::Version;
+    use celestia_core::Version;
 
     fn parse_version(s: &str) -> Version {
         let json = format!("\"{s}\"");

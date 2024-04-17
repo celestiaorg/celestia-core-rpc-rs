@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -9,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.32.1](https://github.com/eigerco/celestia-tendermint-rs/compare/celestia-tendermint-v0.32.0...celestia-tendermint-v0.32.1) - 2024-01-15
 
 ### Other
+
 - fully specify homepage url in metadata ([#27](https://github.com/eigerco/celestia-tendermint-rs/pull/27))
 - align authors, repository and homepage keys ([#25](https://github.com/eigerco/celestia-tendermint-rs/pull/25))
 
@@ -17,19 +19,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 
 ### Added
+
 - allow deserialization of an empty hash ([#7](https://github.com/eigerco/celestia-tendermint-rs/pull/7))
 - use protobuffers from celestia-core ([#1](https://github.com/eigerco/celestia-tendermint-rs/pull/1))
 
 ### Fixed
+
 - Use `instant` only in wasm32 and with wasm-bindgen feature
 - fix doc generation ([#2](https://github.com/eigerco/celestia-tendermint-rs/pull/2))
 
 ### Fixed - inherited
+
 - fix deserialize power field in validator_update ([#451](https://github.com/informalsystems/tendermint-rs/pull/451))
 - fix master again ([#159](https://github.com/informalsystems/tendermint-rs/pull/159))
 - fix build on master 🔧💚 ([#157](https://github.com/informalsystems/tendermint-rs/pull/157))
 
 ### Other
+
 - pre-release cleanups ([#16](https://github.com/eigerco/celestia-tendermint-rs/pull/16))
 - Use instant to get time for wasm32 target ([#13](https://github.com/eigerco/celestia-tendermint-rs/pull/13))
 - Revert "Use instant to get time for wasm32 target"
@@ -40,6 +46,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Use Hash instead of Option<Hash> ([#4](https://github.com/eigerco/celestia-tendermint-rs/pull/4))
 
 ### Other - inherited
+
 - Prepare release for v0.32.0 ([#1314](https://github.com/informalsystems/tendermint-rs/pull/1314))
 - Loosen bounds on merkle hash arguments ([#1311](https://github.com/informalsystems/tendermint-rs/pull/1311))
 - Attack detector and evidence reporting ([#1292](https://github.com/informalsystems/tendermint-rs/pull/1292))
@@ -50,7 +57,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Bump `ed25519` to v2, `k256` to v0.13, `signature` to v2 ([#1285](https://github.com/informalsystems/tendermint-rs/pull/1285))
 - Fix new Clippy warnings introduced in Rust 1.68 ([#1284](https://github.com/informalsystems/tendermint-rs/pull/1284))
 - Release 0.30.0 ([#1282](https://github.com/informalsystems/tendermint-rs/pull/1282))
-- Derive `Hash` on `tendermint::Time` again ([#1278](https://github.com/informalsystems/tendermint-rs/pull/1278))
+- Derive `Hash` on `celestia_core::Time` again ([#1278](https://github.com/informalsystems/tendermint-rs/pull/1278))
 - Fix typos ([#1266](https://github.com/informalsystems/tendermint-rs/pull/1266))
 - Side-by-side support for Tendermint 0.34 and 0.37 ([#1193](https://github.com/informalsystems/tendermint-rs/pull/1193))
 - Prepare `0.29.1` release of `tendermint` ([#1273](https://github.com/informalsystems/tendermint-rs/pull/1273))
@@ -65,7 +72,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Release v0.27.0 ([#1240](https://github.com/informalsystems/tendermint-rs/pull/1240))
 - Remove async-trait from dependencies ([#1237](https://github.com/informalsystems/tendermint-rs/pull/1237))
 - Decouple tendermint-rpc from tendermint-proto ([#1234](https://github.com/informalsystems/tendermint-rs/pull/1234))
-- Change hashes' type from `Bytes` to `tendermint::Hash` or `tendermint::AppHash` ([#1232](https://github.com/informalsystems/tendermint-rs/pull/1232))
+- Change hashes' type from `Bytes` to `celestia_core::Hash` or `celestia_core::AppHash` ([#1232](https://github.com/informalsystems/tendermint-rs/pull/1232))
 - Added `unix_timestamp` and `unix_timestamp_nanos` method in Time struct. ([#1176](https://github.com/informalsystems/tendermint-rs/pull/1176))
 - Fix clippy lints for Rust 1.65 ([#1223](https://github.com/informalsystems/tendermint-rs/pull/1223))
 - Replace RPC ABCI types with ABCI domain types ([#1204](https://github.com/informalsystems/tendermint-rs/pull/1204))
@@ -95,7 +102,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Release v0.23.3 ([#1066](https://github.com/informalsystems/tendermint-rs/pull/1066))
 - Add temporary fix and tests for `block_results` serialization ([#1061](https://github.com/informalsystems/tendermint-rs/pull/1061))
 - Bump `k256` to v0.10 ([#1059](https://github.com/informalsystems/tendermint-rs/pull/1059)) ([#1060](https://github.com/informalsystems/tendermint-rs/pull/1060))
-- Derive `Hash` on `tendermint::Time` ([#1054](https://github.com/informalsystems/tendermint-rs/pull/1054)) ([#1055](https://github.com/informalsystems/tendermint-rs/pull/1055))
+- Derive `Hash` on `celestia_core::Time` ([#1054](https://github.com/informalsystems/tendermint-rs/pull/1054)) ([#1055](https://github.com/informalsystems/tendermint-rs/pull/1055))
 - Remove unnecessary cdylib artifacts from the build ([#1052](https://github.com/informalsystems/tendermint-rs/pull/1052)) ([#1056](https://github.com/informalsystems/tendermint-rs/pull/1056))
 - Release v0.23.2 ([#1043](https://github.com/informalsystems/tendermint-rs/pull/1043))
 - Expunge more uses of time >0.3.2 API ([#1050](https://github.com/informalsystems/tendermint-rs/pull/1050))
@@ -109,7 +116,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Use `core` and `alloc` crates for `no_std` compatibility (Take 2) ([#993](https://github.com/informalsystems/tendermint-rs/pull/993))
 - Update to official Prost v0.9 ([#1011](https://github.com/informalsystems/tendermint-rs/pull/1011))
 - Bump version to 0.23.0-internal ([#1009](https://github.com/informalsystems/tendermint-rs/pull/1009))
-- Move out `tendermint::config` to `tendermint-config` crate ([#986](https://github.com/informalsystems/tendermint-rs/pull/986))
+- Move out `celestia_core::config` to `tendermint-config` crate ([#986](https://github.com/informalsystems/tendermint-rs/pull/986))
 - Adopt forked prost crates ([#1005](https://github.com/informalsystems/tendermint-rs/pull/1005))
 - Use chrono::DateTime instead of std::time::SystemTime ([#994](https://github.com/informalsystems/tendermint-rs/pull/994))
 - Release v0.22.0 ([#987](https://github.com/informalsystems/tendermint-rs/pull/987))
@@ -121,7 +128,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Fix recent clippy errors on `master` ([#941](https://github.com/informalsystems/tendermint-rs/pull/941))
 - Release v0.21.0 ([#935](https://github.com/informalsystems/tendermint-rs/pull/935))
 - Ensure correct `TrustThresholdFraction` construction ([#934](https://github.com/informalsystems/tendermint-rs/pull/934))
-- Specify default value for `tendermint::block::Size` ([#931](https://github.com/informalsystems/tendermint-rs/pull/931))
+- Specify default value for `celestia_core::block::Size` ([#931](https://github.com/informalsystems/tendermint-rs/pull/931))
 - Temporarily revert [#926](https://github.com/informalsystems/tendermint-rs/pull/926) ([#928](https://github.com/informalsystems/tendermint-rs/pull/928))
 - Deduplicate RPC domain types ([#922](https://github.com/informalsystems/tendermint-rs/pull/922))
 - Update `prost` and `prost-types` to version 0.8 ([#926](https://github.com/informalsystems/tendermint-rs/pull/926))
@@ -148,7 +155,7 @@ This is the first release of the celestia-tendermint-rs, fork of tendermint-rs.
 - Release v0.18.0 ([#796](https://github.com/informalsystems/tendermint-rs/pull/796))
 - Update Tokio to 1.0, Hyper to 0.14, Prost to 0.7 and Bytes to 1.0 ([#783](https://github.com/informalsystems/tendermint-rs/pull/783))
 - Release v0.17.1 ([#778](https://github.com/informalsystems/tendermint-rs/pull/778))
-- Fix formatting of tendermint::Time ([#775](https://github.com/informalsystems/tendermint-rs/pull/775))
+- Fix formatting of celestia_core::Time ([#775](https://github.com/informalsystems/tendermint-rs/pull/775))
 - Fix new Clippy warnings as of Rust 1.49 ([#766](https://github.com/informalsystems/tendermint-rs/pull/766))
 - rpc-probe fixes and kvstore-fixtures and tests ([#758](https://github.com/informalsystems/tendermint-rs/pull/758))
 - kvstore test with cargo-make invoking docker ([#748](https://github.com/informalsystems/tendermint-rs/pull/748))

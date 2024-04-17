@@ -141,7 +141,7 @@ define_error! {
             | _ | { "invalid URI" },
 
         Tendermint
-            [ tendermint::Error ]
+            [ celestia_core::Error ]
             | _ | { "tendermint error" },
 
         ParseInt

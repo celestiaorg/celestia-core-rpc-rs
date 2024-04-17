@@ -2,9 +2,9 @@
 
 use core::str::FromStr;
 
+use celestia_core::Hash;
 use futures::StreamExt;
 use structopt::StructOpt;
-use tendermint::Hash;
 use tendermint_rpc::{
     client::CompatMode,
     dialect::{Dialect, LatestDialect},
@@ -371,7 +371,8 @@ where
         ClientRequest::BlockByHash { hash } => serde_json::to_string_pretty(
             &client
                 .block_by_hash(
-                    tendermint::Hash::from_str(&hash).map_err(|e| Error::parse(e.to_string()))?,
+                    celestia_core::Hash::from_str(&hash)
+                        .map_err(|e| Error::parse(e.to_string()))?,
                 )
                 .await?,
         )

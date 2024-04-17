@@ -1,5 +1,5 @@
 [package]
-name       = "tendermint"
+name       = "celestia-core"
 version    = "0.34.0"
 license    = "Apache-2.0"
 homepage   = "https://www.eiger.co"
@@ -23,7 +23,8 @@ authors = [
     "Ismail Khoffi <Ismail.Khoffi@gmail.com>",
     "ValarDragon <dojha12@gmail.com>",
     "Tony Arcieri <tony@iqlusion.io>",
-    "Eiger <hello@eiger.co>"
+    "Eiger <hello@eiger.co>",
+    "Diego Ferrer <diego@celestia.org>"
 ]
 
 [package.metadata.docs.rs]

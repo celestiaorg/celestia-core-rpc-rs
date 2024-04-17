@@ -1,8 +1,8 @@
 //! `/broadcast_tx_async`: broadcast a transaction and return immediately.
 
 use bytes::Bytes;
+use celestia_core::{abci::Code, Hash};
 use serde::{Deserialize, Serialize};
-use tendermint::{abci::Code, Hash};
 
 use crate::{dialect::Dialect, prelude::*, request::RequestMessage, serializers};
 

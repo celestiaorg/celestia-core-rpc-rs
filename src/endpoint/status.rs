@@ -1,7 +1,7 @@
 //! `/status` endpoint JSON-RPC wrapper
 
+use celestia_core::{block, node, validator, AppHash, Hash, Time};
 use serde::{Deserialize, Serialize};
-use tendermint::{block, node, validator, AppHash, Hash, Time};
 
 use crate::{dialect::Dialect, request::RequestMessage};
 
@@ -42,11 +42,11 @@ impl crate::Response for Response {}
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SyncInfo {
     /// Latest block hash
-    #[serde(with = "tendermint::serializers::hash")]
+    #[serde(with = "celestia_core::serializers::hash")]
     pub latest_block_hash: Hash,
 
     /// Latest app hash
-    #[serde(with = "tendermint::serializers::apphash")]
+    #[serde(with = "celestia_core::serializers::apphash")]
     pub latest_app_hash: AppHash,
 
     /// Latest block height

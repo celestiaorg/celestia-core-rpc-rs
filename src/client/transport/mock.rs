@@ -244,8 +244,8 @@ impl MockRequestMethodMatcher {
 mod test {
     use std::path::PathBuf;
 
+    use celestia_core::{block::Height, chain::Id};
     use futures::StreamExt;
-    use tendermint::{block::Height, chain::Id};
     use tokio::fs;
 
     use super::*;

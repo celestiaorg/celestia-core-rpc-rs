@@ -11,7 +11,7 @@ use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 use subtle::{self, ConstantTimeEq};
 use subtle_encoding::hex;
 
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::Protobuf;
 
 use crate::serializers::cow_str::CowStr;
 use crate::{error::Error, prelude::*};

@@ -1,4 +1,4 @@
-use celetia_core_proto::v0_34::types::CanonicalVote as RawCanonicalVote;
+use celestia_core_proto::v0_34::types::CanonicalVote as RawCanonicalVote;
 use serde::{Deserialize, Serialize};
 
 use crate::{block, chain::Id as ChainId, prelude::*, Time};
@@ -93,7 +93,7 @@ impl CanonicalVote {
 mod tests {
 
     tendermint_pb_modules! {
-        use celetia_core_proto::google::protobuf::Timestamp;
+        use celestia_core_proto::google::protobuf::Timestamp;
         use pb::types::{
             CanonicalBlockId as RawCanonicalBlockId,
             CanonicalPartSetHeader as RawCanonicalPartSetHeader,

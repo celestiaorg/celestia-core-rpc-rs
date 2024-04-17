@@ -1,5 +1,5 @@
 use crate::{block, prelude::*, AppHash};
-use celetia_core_proto::v0_34::abci as pb;
+use celestia_core_proto::v0_34::abci as pb;
 
 use serde::{Deserialize, Serialize};
 

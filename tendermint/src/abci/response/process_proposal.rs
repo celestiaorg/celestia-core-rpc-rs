@@ -26,8 +26,8 @@ pub enum ProcessProposalResult {
 mod v0_34 {
     use super::{ProcessProposal, ProcessProposalResult};
     use crate::Error;
-    use celetia_core_proto::v0_34::abci as pb;
-    use celetia_core_proto::Protobuf;
+    use celestia_core_proto::v0_34::abci as pb;
+    use celestia_core_proto::Protobuf;
 
     impl From<ProcessProposal> for pb::ResponseProcessProposal {
         fn from(value: ProcessProposal) -> pb::ResponseProcessProposal {

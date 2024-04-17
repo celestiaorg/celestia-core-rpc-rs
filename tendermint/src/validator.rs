@@ -1,7 +1,7 @@
 //! Tendermint validators
 
-use celetia_core_proto::v0_34::types::SimpleValidator as RawSimpleValidator;
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::v0_34::types::SimpleValidator as RawSimpleValidator;
+use celestia_core_proto::Protobuf;
 use serde::{Deserialize, Serialize};
 
 use crate::{

@@ -121,8 +121,8 @@ pub struct Snapshot {
 mod v0_34 {
     use super::{CommitInfo, Misbehavior, MisbehaviorKind, Snapshot, Validator, VoteInfo};
     use crate::{prelude::*, Error};
-    use celetia_core_proto::v0_34::abci as pb;
-    use celetia_core_proto::Protobuf;
+    use celestia_core_proto::v0_34::abci as pb;
+    use celestia_core_proto::Protobuf;
 
     use bytes::Bytes;
 

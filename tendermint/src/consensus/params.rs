@@ -55,14 +55,14 @@ fn key_type(s: &str) -> public_key::Algorithm {
 }
 
 mod v0_34 {
-    use celetia_core_proto::v0_34::{
+    use celestia_core_proto::v0_34::{
         abci::ConsensusParams as RawAbciParams,
         types::{
             ConsensusParams as RawParams, ValidatorParams as RawValidatorParams,
             VersionParams as RawVersionParams,
         },
     };
-    use celetia_core_proto::Protobuf;
+    use celestia_core_proto::Protobuf;
 
     use super::{key_type, Params, ValidatorParams, VersionParams};
     use crate::{error::Error, prelude::*, public_key};

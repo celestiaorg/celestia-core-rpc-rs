@@ -1,6 +1,6 @@
 //! Commits to a Tendermint blockchain
 
-use celetia_core_proto::v0_34::types::Commit as RawCommit;
+use celestia_core_proto::v0_34::types::Commit as RawCommit;
 use serde::{Deserialize, Serialize};
 
 use crate::{

@@ -1,5 +1,5 @@
-use celetia_core_proto::v0_34::abci as pb;
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::v0_34::abci as pb;
+use celestia_core_proto::Protobuf;
 
 use crate::abci::request::{ConsensusRequest, InfoRequest, MempoolRequest, SnapshotRequest};
 use crate::abci::MethodKind;

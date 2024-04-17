@@ -1,6 +1,6 @@
 //! Merkle proofs
 
-use celetia_core_proto::v0_34::crypto::Proof as RawProof;
+use celestia_core_proto::v0_34::crypto::Proof as RawProof;
 use serde::{Deserialize, Serialize};
 
 use crate::{prelude::*, serializers, Hash};

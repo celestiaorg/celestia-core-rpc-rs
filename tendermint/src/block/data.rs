@@ -1,4 +1,4 @@
-use celetia_core_proto::v0_34::types::Data as RawData;
+use celestia_core_proto::v0_34::types::Data as RawData;
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::*;
@@ -15,8 +15,8 @@ pub struct Data {
 mod v0_34 {
     use super::Data;
     use crate::{prelude::*, Error};
-    use celetia_core_proto::v0_34::types::Data as RawData;
-    use celetia_core_proto::Protobuf;
+    use celestia_core_proto::v0_34::types::Data as RawData;
+    use celestia_core_proto::Protobuf;
 
     impl Protobuf<RawData> for Data {}
 

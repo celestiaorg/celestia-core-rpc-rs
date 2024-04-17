@@ -9,8 +9,8 @@ use core::convert::Infallible;
 use core::{fmt, str::FromStr};
 
 use bytes::BufMut;
-use celetia_core_proto::v0_34::types::{CanonicalVote as RawCanonicalVote, Vote as RawVote};
-use celetia_core_proto::{Error as ProtobufError, Protobuf};
+use celestia_core_proto::v0_34::types::{CanonicalVote as RawCanonicalVote, Vote as RawVote};
+use celestia_core_proto::{Error as ProtobufError, Protobuf};
 use serde::{Deserialize, Serialize};
 
 pub use self::{

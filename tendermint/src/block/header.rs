@@ -1,10 +1,10 @@
 //! Block headers
 
-use celetia_core_proto::v0_34::{
+use celestia_core_proto::v0_34::{
     types::{BlockId as RawBlockId, Header as RawHeader},
     version::Consensus as RawConsensusVersion,
 };
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::Protobuf;
 use serde::{Deserialize, Serialize};
 
 use crate::{

@@ -7,8 +7,8 @@ mod sign_proposal;
 use core::convert::Infallible;
 
 use bytes::BufMut;
-use celetia_core_proto::v0_34::types::CanonicalProposal as RawCanonicalProposal;
-use celetia_core_proto::{Error as ProtobufError, Protobuf};
+use celestia_core_proto::v0_34::types::CanonicalProposal as RawCanonicalProposal;
+use celestia_core_proto::{Error as ProtobufError, Protobuf};
 pub use msg_type::Type;
 pub use sign_proposal::{SignProposalRequest, SignedProposalResponse};
 

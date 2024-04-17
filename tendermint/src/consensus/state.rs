@@ -26,7 +26,7 @@ pub struct State {
     pub step: i8,
 
     /// Block ID being proposed (if available)
-    #[serde(with = "celetia_core_proto::serializers::optional")]
+    #[serde(with = "celestia_core_proto::serializers::optional")]
     pub block_id: Option<block::Id>,
 }
 

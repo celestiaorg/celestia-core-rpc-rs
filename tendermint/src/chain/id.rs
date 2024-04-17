@@ -8,7 +8,7 @@ use core::{
     str::{self, FromStr},
 };
 
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::Protobuf;
 use serde::{de::Error as _, Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::serializers::cow_str::CowStr;

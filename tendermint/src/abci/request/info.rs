@@ -19,8 +19,8 @@ pub struct Info {
 
 mod v0_34 {
     use super::Info;
-    use celetia_core_proto::v0_34::abci as pb;
-    use celetia_core_proto::Protobuf;
+    use celestia_core_proto::v0_34::abci as pb;
+    use celestia_core_proto::Protobuf;
 
     impl From<Info> for pb::RequestInfo {
         fn from(info: Info) -> Self {

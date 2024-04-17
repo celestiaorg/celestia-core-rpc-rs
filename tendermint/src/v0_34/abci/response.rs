@@ -147,8 +147,8 @@ impl TryFrom<Response> for SnapshotResponse {
 // Protobuf conversions
 // =============================================================================
 
-use celetia_core_proto::v0_34::abci as pb;
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::v0_34::abci as pb;
+use celestia_core_proto::Protobuf;
 
 impl From<Response> for pb::Response {
     fn from(response: Response) -> pb::Response {

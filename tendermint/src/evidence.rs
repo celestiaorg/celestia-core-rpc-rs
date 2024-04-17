@@ -5,8 +5,8 @@ use core::{
     slice,
 };
 
-use celetia_core_proto::google::protobuf::Duration as RawDuration;
-use celetia_core_proto::Protobuf;
+use celestia_core_proto::google::protobuf::Duration as RawDuration;
+use celestia_core_proto::Protobuf;
 use serde::{Deserialize, Serialize};
 
 use crate::{

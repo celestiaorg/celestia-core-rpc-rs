@@ -2,7 +2,7 @@
 //! It is what the rpc endpoint /commit returns and hence can be used by a
 //! light client.
 
-use celetia_core_proto::v0_34::types::SignedHeader as RawSignedHeader;
+use celestia_core_proto::v0_34::types::SignedHeader as RawSignedHeader;
 use serde::{Deserialize, Serialize};
 
 use crate::{block, Error};

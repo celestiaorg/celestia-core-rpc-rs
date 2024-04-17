@@ -32,7 +32,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 celestia-core-proto = { version = "0.34.0", default-features = false, path = "../proto" }
-
 bytes = { version = "1.2", default-features = false, features = ["serde"] }
 digest = { version = "0.10", default-features = false }
 ed25519 = { version = "2", default-features = false, features = ["alloc"] }

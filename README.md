@@ -14,7 +14,7 @@ dependencies small in cases where only the core types are needed.
 [crate-image]: https://img.shields.io/crates/v/tendermint-rpc.svg
 [crate-link]: https://crates.io/crates/tendermint-rpc
 [docs-image]: https://docs.rs/tendermint-rpc/badge.svg
-[docs-link]: https://docs.rs/tendermint-rpc/
+[docs-link]: https://github.com/celestiaorg/celestia-core/tree/main/docs
 
 [//]: # (general links)
 

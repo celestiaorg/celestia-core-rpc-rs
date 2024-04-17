@@ -8,7 +8,7 @@ pub struct PrepareProposal {
     pub block_data_size: i64,
     pub chain_id: String,
     pub height: i64,
-    pub time: celestia_tendermint_proto::google::protobuf::Timestamp,
+    pub time: celetia_core_proto::google::protobuf::Timestamp,
 }
 
 // =============================================================================
@@ -18,8 +18,8 @@ pub struct PrepareProposal {
 mod v0_34 {
     use super::PrepareProposal;
     use crate::{prelude::*, Error};
-    use celestia_tendermint_proto::v0_34::abci as pb;
-    use celestia_tendermint_proto::Protobuf;
+    use celetia_core_proto::v0_34::abci as pb;
+    use celetia_core_proto::Protobuf;
 
     impl From<PrepareProposal> for pb::RequestPrepareProposal {
         fn from(value: PrepareProposal) -> Self {

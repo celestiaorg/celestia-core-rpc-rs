@@ -12,7 +12,7 @@ mod round;
 pub mod signed_header;
 mod size;
 
-use celestia_tendermint_proto::v0_34::types::Block as RawBlock;
+use celetia_core_proto::v0_34::types::Block as RawBlock;
 use serde::{Deserialize, Serialize};
 
 pub use self::{
@@ -53,8 +53,8 @@ pub struct Block {
 mod v0_34 {
     use super::{Block, Commit, Header};
     use crate::{prelude::*, Error};
-    use celestia_tendermint_proto::v0_34::types::Block as RawBlock;
-    use celestia_tendermint_proto::Protobuf;
+    use celetia_core_proto::v0_34::types::Block as RawBlock;
+    use celetia_core_proto::Protobuf;
 
     impl Protobuf<RawBlock> for Block {}
 

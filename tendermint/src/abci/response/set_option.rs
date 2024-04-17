@@ -15,8 +15,8 @@ pub struct SetOption {
 
 // The SetOption request has been removed after 0.34.
 
-use celestia_tendermint_proto::v0_34::abci as pb;
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::v0_34::abci as pb;
+use celetia_core_proto::Protobuf;
 
 impl From<SetOption> for pb::ResponseSetOption {
     fn from(message: SetOption) -> Self {

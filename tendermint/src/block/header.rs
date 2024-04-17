@@ -1,10 +1,10 @@
 //! Block headers
 
-use celestia_tendermint_proto::v0_34::{
+use celetia_core_proto::v0_34::{
     types::{BlockId as RawBlockId, Header as RawHeader},
     version::Consensus as RawConsensusVersion,
 };
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::Protobuf;
 use serde::{Deserialize, Serialize};
 
 use crate::{

@@ -3,7 +3,7 @@ use core::{
     str::{self, FromStr},
 };
 
-use celestia_tendermint_proto::v0_34::types::BlockId as RawBlockId;
+use celetia_core_proto::v0_34::types::BlockId as RawBlockId;
 use serde::{Deserialize, Serialize};
 
 use crate::{

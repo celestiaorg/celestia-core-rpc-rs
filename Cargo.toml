@@ -63,7 +63,7 @@ websocket-client = [
 [dependencies]
 tendermint = { version = "0.34.0", default-features = false, path = "./tendermint"}
 tendermint-config = { version = "0.34.0",  default-features = false }
-celestia-tendermint-proto = { version = "0.34.0", default-features = false, path = "./proto" }
+celestia-core-proto = { version = "0.34.0", default-features = false, path = "./proto" }
 
 async-trait = { version = "0.1", default-features = false }
 bytes = { version = "1.0", default-features = false }

@@ -1,5 +1,5 @@
-use celestia_tendermint_proto::v0_34::types::TxProof as RawTxProof;
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::v0_34::types::TxProof as RawTxProof;
+use celetia_core_proto::Protobuf;
 use serde::{Deserialize, Serialize};
 
 use crate::{merkle, prelude::*, Error, Hash};

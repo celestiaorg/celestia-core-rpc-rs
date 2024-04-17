@@ -4,7 +4,7 @@ pub use ed25519::Signature as Ed25519Signature;
 #[cfg(feature = "secp256k1")]
 pub use k256::ecdsa::Signature as Secp256k1Signature;
 
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::Protobuf;
 
 use crate::{error::Error, prelude::*};
 

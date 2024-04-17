@@ -51,10 +51,10 @@ impl From<ConsensusResponse> for Response {
             ConsensusResponse::InitChain(x) => Self::InitChain(x),
             ConsensusResponse::PrepareProposal(_) => {
                 panic!("Cannot convert PrepareProposal into a v0.34 Response")
-            },
+            }
             ConsensusResponse::ProcessProposal(_) => {
                 panic!("Cannot convert ProcessProposal into a v0.34 Response")
-            },
+            }
             ConsensusResponse::BeginBlock(x) => Self::BeginBlock(x),
             ConsensusResponse::DeliverTx(x) => Self::DeliverTx(x),
             ConsensusResponse::EndBlock(x) => Self::EndBlock(x),
@@ -147,8 +147,8 @@ impl TryFrom<Response> for SnapshotResponse {
 // Protobuf conversions
 // =============================================================================
 
-use celestia_tendermint_proto::v0_34::abci as pb;
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::v0_34::abci as pb;
+use celetia_core_proto::Protobuf;
 
 impl From<Response> for pb::Response {
     fn from(response: Response) -> pb::Response {

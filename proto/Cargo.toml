@@ -1,5 +1,5 @@
 [package]
-name       = "celestia-tendermint-proto"
+name       = "celestia-core-proto"
 version    = "0.34.0"
 edition    = "2021"
 license    = "Apache-2.0"
@@ -7,11 +7,11 @@ homepage   = "https://celestia.org/"
 repository = "https://github.com/celestiaorg/celestia-core-rpc-rs"
 readme     = "README.md"
 categories = ["cryptography", "cryptography::cryptocurrencies", "database"]
-keywords   = ["blockchain", "tendermint", "proto"]
+keywords   = ["blockchain", "celestia", "proto"]
 
 description = """
     This is a hard fork of tendermint to make it compatible with the Celestia network.
-    celestia-tendermint-proto is the Rust implementation of the Celestia Core proto structs.
+    celestia-core-proto is the Rust implementation of the Celestia Core proto structs.
     """
 
 authors    = [

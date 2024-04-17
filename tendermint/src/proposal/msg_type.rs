@@ -1,6 +1,6 @@
 use core::convert::TryFrom;
 
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::Protobuf;
 use serde::{de::Error as _, Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::{error::Error, prelude::*};

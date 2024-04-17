@@ -1,9 +1,7 @@
 use core::convert::TryFrom;
 
-use celestia_tendermint_proto::v0_37::types::{
-    BlockId as RawBlockId, PartSetHeader as RawPartSetHeader,
-};
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::v0_37::types::{BlockId as RawBlockId, PartSetHeader as RawPartSetHeader};
+use celetia_core_proto::Protobuf;
 
 impl Protobuf<RawBlockId> for BlockId {}
 

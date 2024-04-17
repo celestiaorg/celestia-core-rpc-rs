@@ -30,10 +30,10 @@ impl Size {
 mod v0_34 {
     use super::Size;
     use crate::error::Error;
-    use celestia_tendermint_proto::v0_34::{
+    use celetia_core_proto::v0_34::{
         abci::BlockParams as RawAbciSize, types::BlockParams as RawSize,
     };
-    use celestia_tendermint_proto::Protobuf;
+    use celetia_core_proto::Protobuf;
 
     impl Protobuf<RawSize> for Size {}
 

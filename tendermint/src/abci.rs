@@ -26,7 +26,7 @@
 //! * [`SnapshotRequest`] /  [`SnapshotResponse`] for [`MethodKind::Snapshot`] methods.
 //!
 //! The domain types in this module have conversions to and from the Protobuf
-//! types defined in the [`celestia_tendermint_proto`] crate. These conversions are
+//! types defined in the [`celetia_core_proto`] crate. These conversions are
 //! required for ABCI server implementations, which use the protobufs to
 //! communicate with Tendermint, but should not be required for ABCI
 //! applications, which should use the domain types in an interface defined by

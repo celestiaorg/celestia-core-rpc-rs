@@ -1,6 +1,6 @@
 //! `/prove_shares` endpoint JSON-RPC wrapper
 
-use celestia_tendermint_proto::v0_34::types::ShareProof;
+use celetia_core_proto::v0_34::types::ShareProof;
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::*;

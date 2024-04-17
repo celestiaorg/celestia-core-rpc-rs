@@ -1,4 +1,4 @@
-use celestia_tendermint_proto::v0_34::types::Evidence as RawEvidence;
+use celetia_core_proto::v0_34::types::Evidence as RawEvidence;
 use tendermint::{abci, evidence};
 
 use crate::prelude::*;

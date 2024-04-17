@@ -1,6 +1,6 @@
 //! Block metadata
 
-use celestia_tendermint_proto::v0_34::types::BlockMeta as RawMeta;
+use celetia_core_proto::v0_34::types::BlockMeta as RawMeta;
 use serde::{Deserialize, Serialize};
 
 use super::{Header, Id};

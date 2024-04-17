@@ -7,7 +7,7 @@ use core::{
 };
 
 use bytes::Bytes;
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::Protobuf;
 use serde::{de::Error as _, Deserialize, Deserializer, Serialize, Serializer};
 use subtle_encoding::{Encoding, Hex};
 
@@ -95,7 +95,7 @@ impl Hash {
                 } else {
                     Err(Error::invalid_hash_size())
                 }
-            },
+            }
         }
     }
 
@@ -111,7 +111,7 @@ impl Hash {
                     .decode_to_slice(s.as_bytes(), &mut h)
                     .map_err(Error::subtle_encoding)?;
                 Ok(Hash::Sha256(h))
-            },
+            }
         }
     }
 

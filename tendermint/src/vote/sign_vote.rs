@@ -1,5 +1,5 @@
 use bytes::BufMut;
-use celestia_tendermint_proto::Error as ProtobufError;
+use celetia_core_proto::Error as ProtobufError;
 
 use crate::{chain, prelude::*, privval::RemoteSignerError, Vote};
 

@@ -202,8 +202,8 @@ mod v0_34 {
     use crate::prelude::*;
     use core::convert::{TryFrom, TryInto};
 
-    use celestia_tendermint_proto::v0_34::abci as pb;
-    use celestia_tendermint_proto::Protobuf;
+    use celetia_core_proto::v0_34::abci as pb;
+    use celetia_core_proto::Protobuf;
 
     impl From<EventAttribute> for pb::EventAttribute {
         fn from(event: EventAttribute) -> Self {

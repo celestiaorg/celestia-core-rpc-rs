@@ -1,5 +1,5 @@
-use celestia_tendermint_proto::v0_34::abci as pb;
-use celestia_tendermint_proto::Protobuf;
+use celetia_core_proto::v0_34::abci as pb;
+use celetia_core_proto::Protobuf;
 
 use crate::abci::request::{ConsensusRequest, InfoRequest, MempoolRequest, SnapshotRequest};
 use crate::abci::MethodKind;
@@ -81,10 +81,10 @@ impl From<ConsensusRequest> for Request {
             ConsensusRequest::InitChain(x) => Self::InitChain(x),
             ConsensusRequest::PrepareProposal(_) => {
                 panic!("Cannot convert PrepareProposal into a v0.34 Request")
-            },
+            }
             ConsensusRequest::ProcessProposal(_) => {
                 panic!("Cannot convert ProcessProposal into a v0.34 Request")
-            },
+            }
             ConsensusRequest::BeginBlock(x) => Self::BeginBlock(x),
             ConsensusRequest::DeliverTx(x) => Self::DeliverTx(x),
             ConsensusRequest::EndBlock(x) => Self::EndBlock(x),

@@ -8,7 +8,7 @@ use core::{
     time::Duration,
 };
 
-use celestia_tendermint_proto::{google::protobuf::Timestamp, serializers::timestamp, Protobuf};
+use celetia_core_proto::{google::protobuf::Timestamp, serializers::timestamp, Protobuf};
 #[cfg(all(feature = "clock", target_arch = "wasm32", feature = "wasm-bindgen"))]
 use instant::SystemTime;
 use serde::{Deserialize, Serialize};

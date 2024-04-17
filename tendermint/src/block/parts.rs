@@ -1,6 +1,6 @@
 //! Block parts
 
-use celestia_tendermint_proto::v0_34::types::PartSetHeader as RawPartSetHeader;
+use celetia_core_proto::v0_34::types::PartSetHeader as RawPartSetHeader;
 use serde::{Deserialize, Serialize};
 
 use crate::{error::Error, prelude::*, Hash};

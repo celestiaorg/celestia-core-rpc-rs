@@ -47,6 +47,6 @@ impl<S: Dialect> crate::SimpleRequest<S> for Request {
 
 /// ProveShares query response wrapper
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
-pub struct Response(ShareProof);
+pub struct Response(pub ShareProof);
 
 impl crate::Response for Response {}

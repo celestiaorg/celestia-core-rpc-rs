@@ -9,7 +9,7 @@ use crate::{client::subscription::SubscriptionTx, error::Error, event::Event, pr
 pub type SubscriptionQuery = String;
 pub type SubscriptionId = String;
 
-#[cfg_attr(not(feature = "websocket"), allow(dead_code))]
+#[cfg_attr(not(feature = "websocket-client"), allow(dead_code))]
 pub type SubscriptionIdRef<'a> = &'a str;
 
 /// Provides a mechanism for tracking [`Subscription`]s and routing [`Event`]s
@@ -28,7 +28,7 @@ pub struct SubscriptionRouter {
 impl SubscriptionRouter {
     /// Publishes the given error to all of the subscriptions to which the
     /// error is relevant, based on the given subscription id query.
-    #[cfg_attr(not(feature = "websocket"), allow(dead_code))]
+    #[cfg_attr(not(feature = "websocket-client"), allow(dead_code))]
     pub fn publish_error(&mut self, id: SubscriptionIdRef<'_>, err: Error) -> PublishResult {
         if let Some(query) = self.subscription_query(id).cloned() {
             self.publish(query, Err(err))
@@ -38,7 +38,7 @@ impl SubscriptionRouter {
     }
 
     /// Get the query associated with the given subscription.
-    #[cfg_attr(not(feature = "websocket"), allow(dead_code))]
+    #[cfg_attr(not(feature = "websocket-client"), allow(dead_code))]
     fn subscription_query(&self, id: SubscriptionIdRef<'_>) -> Option<&SubscriptionQuery> {
         for (query, subs) in &self.subscriptions {
             if subs.contains_key(id) {
@@ -51,7 +51,7 @@ impl SubscriptionRouter {
 
     /// Publishes the given event to all of the subscriptions to which the
     /// event is relevant, based on the associated query.
-    #[cfg_attr(not(feature = "websocket"), allow(dead_code))]
+    #[cfg_attr(not(feature = "websocket-client"), allow(dead_code))]
     pub fn publish_event(&mut self, ev: Event) -> PublishResult {
         self.publish(ev.query.clone(), Ok(ev))
     }
@@ -111,6 +111,17 @@ impl SubscriptionRouter {
             .map(|subs_for_query| subs_for_query.len())
             .unwrap_or(0)
     }
+
+    /// Removes all the subscriptions.
+    pub fn remove_all(&mut self) -> usize {
+        let count = self
+            .subscriptions
+            .values()
+            .map(|subs_for_query| subs_for_query.len())
+            .sum();
+        self.subscriptions.clear();
+        count
+    }
 }
 
 #[cfg(feature = "websocket-client")]
@@ -134,30 +145,14 @@ pub enum PublishResult {
 
 #[cfg(test)]
 mod test {
-    use std::path::PathBuf;
-
-    use tokio::{
-        fs,
-        time::{self, Duration},
-    };
+    use tokio::time::{self, Duration};
 
     use super::*;
     use crate::{
         client::sync::{unbounded, ChannelRx},
-        event::{Event, WrappedEvent},
+        event::{Event, EventData},
         utils::uuid_str,
     };
-
-    async fn read_json_fixture(version: &str, name: &str) -> String {
-        fs::read_to_string(
-            PathBuf::from("./tests/kvstore_fixtures")
-                .join(version)
-                .join("incoming")
-                .join(name.to_owned() + ".json"),
-        )
-        .await
-        .unwrap()
-    }
 
     async fn must_recv<T>(ch: &mut ChannelRx<T>, timeout_ms: u64) -> T {
         let delay = time::sleep(Duration::from_millis(timeout_ms));
@@ -178,101 +173,44 @@ mod test {
         }
     }
 
-    mod v0_34 {
-        use super::*;
-        use crate::dialect::v0_34::Event as RpcEvent;
-
-        async fn read_event(name: &str) -> Event {
-            serde_json::from_str::<WrappedEvent<RpcEvent>>(
-                read_json_fixture("v0_34", name).await.as_str(),
-            )
-            .unwrap()
-            .into_result()
-            .unwrap()
-            .into()
-        }
-
-        #[tokio::test]
-        async fn router_basic_pub_sub() {
-            let mut router = SubscriptionRouter::default();
-
-            let (subs1_id, subs2_id, subs3_id) = (uuid_str(), uuid_str(), uuid_str());
-            let (subs1_event_tx, mut subs1_event_rx) = unbounded();
-            let (subs2_event_tx, mut subs2_event_rx) = unbounded();
-            let (subs3_event_tx, mut subs3_event_rx) = unbounded();
-
-            // Two subscriptions with the same query
-            router.add(subs1_id, "query1", subs1_event_tx);
-            router.add(subs2_id, "query1", subs2_event_tx);
-            // Another subscription with a different query
-            router.add(subs3_id, "query2", subs3_event_tx);
-
-            let mut ev = read_event("subscribe_newblock_0").await;
-            ev.query = "query1".into();
-            router.publish_event(ev.clone());
-
-            let subs1_ev = must_recv(&mut subs1_event_rx, 500).await.unwrap();
-            let subs2_ev = must_recv(&mut subs2_event_rx, 500).await.unwrap();
-            must_not_recv(&mut subs3_event_rx, 50).await;
-            assert_eq!(ev, subs1_ev);
-            assert_eq!(ev, subs2_ev);
-
-            ev.query = "query2".into();
-            router.publish_event(ev.clone());
-
-            must_not_recv(&mut subs1_event_rx, 50).await;
-            must_not_recv(&mut subs2_event_rx, 50).await;
-            let subs3_ev = must_recv(&mut subs3_event_rx, 500).await.unwrap();
-            assert_eq!(ev, subs3_ev);
+    fn make_event(query: &str, index: u64) -> Event {
+        Event {
+            query: query.to_string(),
+            data: EventData::GenericJsonEvent(serde_json::json!({ "index": index })),
+            events: None,
         }
     }
 
-    mod v0_37 {
-        use super::*;
-        use crate::dialect::v0_37::Event as RpcEvent;
+    #[tokio::test]
+    async fn router_basic_pub_sub() {
+        let mut router = SubscriptionRouter::default();
 
-        async fn read_event(name: &str) -> Event {
-            serde_json::from_str::<WrappedEvent<RpcEvent>>(
-                read_json_fixture("v0_37", name).await.as_str(),
-            )
-            .unwrap()
-            .into_result()
-            .unwrap()
-            .into()
-        }
+        let (subs1_id, subs2_id, subs3_id) = (uuid_str(), uuid_str(), uuid_str());
+        let (subs1_event_tx, mut subs1_event_rx) = unbounded();
+        let (subs2_event_tx, mut subs2_event_rx) = unbounded();
+        let (subs3_event_tx, mut subs3_event_rx) = unbounded();
 
-        #[tokio::test]
-        async fn router_basic_pub_sub() {
-            let mut router = SubscriptionRouter::default();
+        // Two subscriptions with the same query
+        router.add(subs1_id, "query1", subs1_event_tx);
+        router.add(subs2_id, "query1", subs2_event_tx);
+        // Another subscription with a different query
+        router.add(subs3_id, "query2", subs3_event_tx);
 
-            let (subs1_id, subs2_id, subs3_id) = (uuid_str(), uuid_str(), uuid_str());
-            let (subs1_event_tx, mut subs1_event_rx) = unbounded();
-            let (subs2_event_tx, mut subs2_event_rx) = unbounded();
-            let (subs3_event_tx, mut subs3_event_rx) = unbounded();
+        let ev_query1 = make_event("query1", 1);
+        router.publish_event(ev_query1.clone());
 
-            // Two subscriptions with the same query
-            router.add(subs1_id, "query1", subs1_event_tx);
-            router.add(subs2_id, "query1", subs2_event_tx);
-            // Another subscription with a different query
-            router.add(subs3_id, "query2", subs3_event_tx);
+        let subs1_ev = must_recv(&mut subs1_event_rx, 500).await.unwrap();
+        let subs2_ev = must_recv(&mut subs2_event_rx, 500).await.unwrap();
+        must_not_recv(&mut subs3_event_rx, 50).await;
+        assert_eq!(ev_query1, subs1_ev);
+        assert_eq!(ev_query1, subs2_ev);
 
-            let mut ev = read_event("subscribe_newblock_0").await;
-            ev.query = "query1".into();
-            router.publish_event(ev.clone());
+        let ev_query2 = make_event("query2", 2);
+        router.publish_event(ev_query2.clone());
 
-            let subs1_ev = must_recv(&mut subs1_event_rx, 500).await.unwrap();
-            let subs2_ev = must_recv(&mut subs2_event_rx, 500).await.unwrap();
-            must_not_recv(&mut subs3_event_rx, 50).await;
-            assert_eq!(ev, subs1_ev);
-            assert_eq!(ev, subs2_ev);
-
-            ev.query = "query2".into();
-            router.publish_event(ev.clone());
-
-            must_not_recv(&mut subs1_event_rx, 50).await;
-            must_not_recv(&mut subs2_event_rx, 50).await;
-            let subs3_ev = must_recv(&mut subs3_event_rx, 500).await.unwrap();
-            assert_eq!(ev, subs3_ev);
-        }
+        must_not_recv(&mut subs1_event_rx, 50).await;
+        must_not_recv(&mut subs2_event_rx, 50).await;
+        let subs3_ev = must_recv(&mut subs3_event_rx, 500).await.unwrap();
+        assert_eq!(ev_query2, subs3_ev);
     }
 }

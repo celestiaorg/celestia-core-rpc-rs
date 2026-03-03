@@ -1,8 +1,9 @@
 //! `/tx` endpoint JSON-RPC wrapper
 
-use celestia_core::{abci, block, tx, Hash};
+use celestia_types::ShareProof;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
+use tendermint::{abci, block, Hash};
 
 use crate::dialect::{DeliverTx, Dialect};
 use crate::{prelude::*, request::RequestMessage, serializers, Method};
@@ -52,9 +53,9 @@ pub struct Response {
     pub hash: Hash,
     pub height: block::Height,
     pub index: u32,
-    pub tx_result: abci::response::DeliverTx,
+    pub tx_result: abci::types::ExecTxResult,
     pub tx: Vec<u8>,
-    pub proof: Option<tx::Proof>,
+    pub proof: Option<ShareProof>,
 }
 
 /// RPC dialect helper for serialization of the response.
@@ -72,7 +73,7 @@ pub struct DialectResponse<Ev> {
     #[serde(with = "serializers::bytes::base64string")]
     pub tx: Vec<u8>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub proof: Option<tx::Proof>,
+    pub proof: Option<ShareProof>,
 }
 
 impl<Ev> crate::Response for DialectResponse<Ev> where Ev: Serialize + DeserializeOwned {}

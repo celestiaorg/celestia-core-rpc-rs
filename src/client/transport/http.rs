@@ -7,7 +7,7 @@ use core::{
 
 use async_trait::async_trait;
 
-use celestia_core::{block::Height, evidence::Evidence, Hash};
+use tendermint::{block::Height, evidence::Evidence, Hash};
 use tendermint_config::net;
 
 use crate::prelude::*;
@@ -20,9 +20,10 @@ use crate::{
 
 /// A JSON-RPC/HTTP Tendermint RPC client (implements [`crate::Client`]).
 ///
-/// Supports both HTTP and HTTPS connections to Tendermint RPC endpoints, and
-/// allows for the use of HTTP proxies (see [`HttpClient::new_with_proxy`] for
-/// details).
+/// Supports both HTTP and HTTPS connections to Tendermint RPC endpoints.
+///
+/// HTTP proxy configuration is currently unsupported with hyper 1.x. Passing a
+/// proxy URL will return an error.
 ///
 /// Does not provide [`crate::event::Event`] subscription facilities (see
 /// [`crate::WebSocketClient`] for a client that does).
@@ -30,7 +31,7 @@ use crate::{
 /// ## Examples
 ///
 /// ```rust,ignore
-/// use tendermint_rpc::{HttpClient, Client};
+/// use celestia_core_rpc::{HttpClient, Client};
 ///
 /// #[tokio::main]
 /// async fn main() {
@@ -68,10 +69,8 @@ impl Builder {
 
     /// Specify the URL of a proxy server for the client to connect through.
     ///
-    /// If the RPC endpoint is secured (HTTPS), the proxy will automatically
-    /// attempt to connect using the [HTTP CONNECT] method.
-    ///
-    /// [HTTP CONNECT]: https://en.wikipedia.org/wiki/HTTP_tunnel
+    /// Proxy support is currently unavailable with hyper 1.x. Calling
+    /// [`Builder::build`] with a proxy URL returns an error.
     pub fn proxy_url(mut self, url: HttpClientUrl) -> Self {
         self.proxy_url = Some(url);
         self
@@ -79,27 +78,20 @@ impl Builder {
 
     /// Try to create a client with the options specified for this builder.
     pub fn build(self) -> Result<HttpClient, Error> {
-        match self.proxy_url {
-            None => Ok(HttpClient {
-                inner: if self.url.0.is_secure() {
-                    sealed::HttpClient::new_https(self.url.try_into()?)
-                } else {
-                    sealed::HttpClient::new_http(self.url.try_into()?)
-                },
-                compat: self.compat,
-            }),
-            Some(proxy_url) => Ok(HttpClient {
-                inner: if proxy_url.0.is_secure() {
-                    sealed::HttpClient::new_https_proxy(
-                        self.url.try_into()?,
-                        proxy_url.try_into()?,
-                    )?
-                } else {
-                    sealed::HttpClient::new_http_proxy(self.url.try_into()?, proxy_url.try_into()?)?
-                },
-                compat: self.compat,
-            }),
+        if self.proxy_url.is_some() {
+            return Err(Error::invalid_params(
+                "HTTP proxy support is not available with hyper 1.x".to_string(),
+            ));
         }
+
+        Ok(HttpClient {
+            inner: if self.url.0.is_secure() {
+                sealed::HttpClient::new_https(self.url.try_into()?)?
+            } else {
+                sealed::HttpClient::new_http(self.url.try_into()?)
+            },
+            compat: self.compat,
+        })
     }
 }
 
@@ -113,7 +105,7 @@ impl HttpClient {
         let url = url.try_into()?;
         Ok(Self {
             inner: if url.0.is_secure() {
-                sealed::HttpClient::new_https(url.try_into()?)
+                sealed::HttpClient::new_https(url.try_into()?)?
             } else {
                 sealed::HttpClient::new_http(url.try_into()?)
             },
@@ -124,10 +116,8 @@ impl HttpClient {
     /// Construct a new Tendermint RPC HTTP/S client connecting to the given
     /// URL, but via the specified proxy's URL.
     ///
-    /// If the RPC endpoint is secured (HTTPS), the proxy will automatically
-    /// attempt to connect using the [HTTP CONNECT] method.
-    ///
-    /// [HTTP CONNECT]: https://en.wikipedia.org/wiki/HTTP_tunnel
+    /// Proxy support is currently unavailable with hyper 1.x. This method
+    /// returns an error.
     pub fn new_with_proxy<U, P>(url: U, proxy_url: P) -> Result<Self, Error>
     where
         U: TryInto<HttpClientUrl, Error = Error>,
@@ -163,6 +153,13 @@ impl HttpClient {
     {
         self.inner.perform(request).await
     }
+
+    async fn perform_v0_37<R>(&self, request: R) -> Result<R::Output, Error>
+    where
+        R: SimpleRequest<dialect::v0_37::Dialect>,
+    {
+        self.inner.perform(request).await
+    }
 }
 
 #[async_trait]
@@ -187,7 +184,9 @@ impl Client for HttpClient {
     {
         let height = height.into();
         match self.compat {
-            CompatMode::V0_37 => self.perform(endpoint::header::Request::new(height)).await,
+            CompatMode::V0_38 | CompatMode::V0_37 => {
+                self.perform(endpoint::header::Request::new(height)).await
+            }
             CompatMode::V0_34 => {
                 // Back-fill with a request to /block endpoint and
                 // taking just the header from the response.
@@ -204,7 +203,7 @@ impl Client for HttpClient {
         hash: Hash,
     ) -> Result<endpoint::header_by_hash::Response, Error> {
         match self.compat {
-            CompatMode::V0_37 => {
+            CompatMode::V0_38 | CompatMode::V0_37 => {
                 self.perform(endpoint::header_by_hash::Request::new(hash))
                     .await
             }
@@ -222,7 +221,8 @@ impl Client for HttpClient {
     /// `/broadcast_evidence`: broadcast an evidence.
     async fn broadcast_evidence(&self, e: Evidence) -> Result<endpoint::evidence::Response, Error> {
         match self.compat {
-            CompatMode::V0_37 => self.perform(endpoint::evidence::Request::new(e)).await,
+            CompatMode::V0_38 => self.perform(endpoint::evidence::Request::new(e)).await,
+            CompatMode::V0_37 => self.perform_v0_37(endpoint::evidence::Request::new(e)).await,
             CompatMode::V0_34 => {
                 self.perform_v0_34(endpoint::evidence::Request::new(e))
                     .await
@@ -323,16 +323,14 @@ impl TryFrom<HttpClientUrl> for hyper::Uri {
 }
 
 mod sealed {
-    use std::io::Read;
-
     use http::header::AUTHORIZATION;
-    use hyper::{
-        body::Buf,
-        client::{connect::Connect, HttpConnector},
-        header, Uri,
-    };
-    use hyper_proxy::{Intercept, Proxy, ProxyConnector};
-    use hyper_rustls::HttpsConnector;
+    use http::header;
+    use http::Uri;
+    use http_body_util::{BodyExt, Full};
+    use hyper::body::Bytes;
+    use hyper_util::client::legacy::{connect::Connect, connect::HttpConnector, Client};
+    use hyper_util::rt::TokioExecutor;
+    use hyper_rustls::HttpsConnectorBuilder;
 
     use crate::prelude::*;
     use crate::{
@@ -343,11 +341,11 @@ mod sealed {
     #[derive(Debug, Clone)]
     pub struct HyperClient<C> {
         uri: Uri,
-        inner: hyper::Client<C>,
+        inner: Client<C, Full<Bytes>>,
     }
 
     impl<C> HyperClient<C> {
-        pub fn new(uri: Uri, inner: hyper::Client<C>) -> Self {
+        pub fn new(uri: Uri, inner: Client<C, Full<Bytes>>) -> Self {
             Self { uri, inner }
         }
     }
@@ -362,7 +360,11 @@ mod sealed {
             S: Dialect,
         {
             let request = self.build_request(request)?;
-            let response = self.inner.request(request).await.map_err(Error::hyper)?;
+            let response = self
+                .inner
+                .request(request)
+                .await
+                .map_err(|err| Error::client_internal(err.to_string()))?;
             let response_body = response_to_string(response).await?;
             tracing::debug!("Incoming response: {}", response_body);
             R::Response::from_string(&response_body).map(Into::into)
@@ -371,7 +373,7 @@ mod sealed {
 
     impl<C> HyperClient<C> {
         /// Build a request using the given Tendermint RPC request.
-        pub fn build_request<R, S>(&self, request: R) -> Result<hyper::Request<hyper::Body>, Error>
+        pub fn build_request<R, S>(&self, request: R) -> Result<hyper::Request<Full<Bytes>>, Error>
         where
             R: SimpleRequest<S>,
             S: Dialect,
@@ -383,7 +385,7 @@ mod sealed {
             let mut request = hyper::Request::builder()
                 .method("POST")
                 .uri(&self.uri)
-                .body(hyper::Body::from(request_body.into_bytes()))
+                .body(Full::new(Bytes::from(request_body.into_bytes())))
                 .map_err(Error::http)?;
 
             {
@@ -396,7 +398,8 @@ mod sealed {
                         .unwrap(),
                 );
 
-                if let Some(auth) = authorize(&self.uri) {
+                let uri_str = self.uri.to_string();
+                if let Some(auth) = authorize(uri_str.as_str()) {
                     headers.insert(AUTHORIZATION, auth.to_string().parse().unwrap());
                 }
             }
@@ -413,43 +416,24 @@ mod sealed {
     #[derive(Debug, Clone)]
     pub enum HttpClient {
         Http(HyperClient<HttpConnector>),
-        Https(HyperClient<HttpsConnector<HttpConnector>>),
-        HttpProxy(HyperClient<ProxyConnector<HttpConnector>>),
-        HttpsProxy(HyperClient<ProxyConnector<HttpsConnector<HttpConnector>>>),
+        Https(HyperClient<hyper_rustls::HttpsConnector<HttpConnector>>),
     }
 
     impl HttpClient {
         pub fn new_http(uri: Uri) -> Self {
-            Self::Http(HyperClient::new(uri, hyper::Client::new()))
+            let inner = Client::builder(TokioExecutor::new()).build_http();
+            Self::Http(HyperClient::new(uri, inner))
         }
 
-        pub fn new_https(uri: Uri) -> Self {
-            Self::Https(HyperClient::new(
-                uri,
-                hyper::Client::builder().build(HttpsConnector::with_native_roots()),
-            ))
-        }
-
-        pub fn new_http_proxy(uri: Uri, proxy_uri: Uri) -> Result<Self, Error> {
-            let proxy = Proxy::new(Intercept::All, proxy_uri);
-            let proxy_connector =
-                ProxyConnector::from_proxy(HttpConnector::new(), proxy).map_err(Error::io)?;
-            Ok(Self::HttpProxy(HyperClient::new(
-                uri,
-                hyper::Client::builder().build(proxy_connector),
-            )))
-        }
-
-        pub fn new_https_proxy(uri: Uri, proxy_uri: Uri) -> Result<Self, Error> {
-            let proxy = Proxy::new(Intercept::All, proxy_uri);
-            let proxy_connector =
-                ProxyConnector::from_proxy(HttpsConnector::with_native_roots(), proxy)
-                    .map_err(Error::io)?;
-
-            Ok(Self::HttpsProxy(HyperClient::new(
-                uri,
-                hyper::Client::builder().build(proxy_connector),
-            )))
+        pub fn new_https(uri: Uri) -> Result<Self, Error> {
+            let https = HttpsConnectorBuilder::new()
+                .with_native_roots()
+                .map_err(Error::io)?
+                .https_or_http()
+                .enable_http1()
+                .build();
+            let inner = Client::builder(TokioExecutor::new()).build(https);
+            Ok(Self::Https(HyperClient::new(uri, inner)))
         }
 
         pub async fn perform<R, S>(&self, request: R) -> Result<R::Output, Error>
@@ -460,21 +444,20 @@ mod sealed {
             match self {
                 HttpClient::Http(c) => c.perform(request).await,
                 HttpClient::Https(c) => c.perform(request).await,
-                HttpClient::HttpProxy(c) => c.perform(request).await,
-                HttpClient::HttpsProxy(c) => c.perform(request).await,
             }
         }
     }
 
-    async fn response_to_string(response: hyper::Response<hyper::Body>) -> Result<String, Error> {
-        let mut response_body = String::new();
-        hyper::body::aggregate(response.into_body())
+    async fn response_to_string(
+        response: hyper::Response<hyper::body::Incoming>,
+    ) -> Result<String, Error> {
+        let collected = response
+            .into_body()
+            .collect()
             .await
-            .map_err(Error::hyper)?
-            .reader()
-            .read_to_string(&mut response_body)
-            .map_err(Error::io)?;
-
+            .map_err(Error::hyper)?;
+        let bytes = collected.to_bytes();
+        let response_body = String::from_utf8(bytes.to_vec()).map_err(|e| Error::parse(e.to_string()))?;
         Ok(response_body)
     }
 }
@@ -484,13 +467,16 @@ mod tests {
     use core::str::FromStr;
 
     use http::{header::AUTHORIZATION, Request, Uri};
-    use hyper::Body;
+    use http_body_util::Full;
+    use hyper::body::Bytes;
+    use hyper_util::client::legacy::Client;
+    use hyper_util::rt::TokioExecutor;
 
     use super::sealed::HyperClient;
     use crate::dialect::LatestDialect;
     use crate::endpoint::abci_info;
 
-    fn authorization(req: &Request<Body>) -> Option<&str> {
+    fn authorization(req: &Request<Full<Bytes>>) -> Option<&str> {
         req.headers()
             .get(AUTHORIZATION)
             .map(|h| h.to_str().unwrap())
@@ -499,7 +485,7 @@ mod tests {
     #[test]
     fn without_basic_auth() {
         let uri = Uri::from_str("http://example.com").unwrap();
-        let inner = hyper::Client::new();
+        let inner = Client::builder(TokioExecutor::new()).build_http();
         let client = HyperClient::new(uri, inner);
         let req =
             HyperClient::build_request::<_, LatestDialect>(&client, abci_info::Request).unwrap();
@@ -510,7 +496,7 @@ mod tests {
     #[test]
     fn with_basic_auth() {
         let uri = Uri::from_str("http://toto:tata@example.com").unwrap();
-        let inner = hyper::Client::new();
+        let inner = Client::builder(TokioExecutor::new()).build_http();
         let client = HyperClient::new(uri, inner);
         let req =
             HyperClient::build_request::<_, LatestDialect>(&client, abci_info::Request).unwrap();

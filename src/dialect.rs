@@ -2,6 +2,8 @@
 //! Tendermint RPC protocol versions.
 
 pub mod v0_34;
+pub mod v0_37;
+pub mod v0_38;
 
 mod begin_block;
 mod check_tx;
@@ -15,17 +17,19 @@ pub use end_block::EndBlock;
 
 use serde::{de::DeserializeOwned, Serialize};
 
-use celestia_core::{abci, evidence};
+use tendermint::{abci, evidence};
 
 pub trait Dialect: sealed::Sealed + Default + Clone + Send + Sync {
     type Event: Into<abci::Event> + Serialize + DeserializeOwned;
     type Evidence: From<evidence::Evidence> + Serialize + DeserializeOwned + Send;
 }
 
-pub type LatestDialect = v0_34::Dialect;
+pub type LatestDialect = v0_38::Dialect;
 
 mod sealed {
     pub trait Sealed {}
 
     impl Sealed for super::v0_34::Dialect {}
+    impl Sealed for super::v0_37::Dialect {}
+    impl Sealed for super::v0_38::Dialect {}
 }

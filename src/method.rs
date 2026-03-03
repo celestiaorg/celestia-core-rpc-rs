@@ -53,11 +53,17 @@ pub enum Method {
     /// Get consensus state
     ConsensusState,
 
-    // Get Data Root Inclusion Proof
+    /// Dump consensus state
+    DumpConsensusState,
+
+    /// Generate data root inclusion proof
     DataRootInclusionProof,
 
     /// Get genesis file
     Genesis,
+
+    /// Get genesis file in multiple chunks
+    GenesisChunked,
 
     /// Get block header
     Header,
@@ -71,8 +77,14 @@ pub enum Method {
     /// Get network info
     NetInfo,
 
-    // Get a Shares Proof
-    ProveShares,
+    /// Check transaction without executing it
+    CheckTx,
+
+    /// Get unconfirmed transactions
+    UnconfirmedTxs,
+
+    /// Get number of unconfirmed transactions
+    NumUnconfirmedTxs,
 
     /// Get node status
     Status,
@@ -92,8 +104,38 @@ pub enum Method {
     /// Unsubscribe from events
     Unsubscribe,
 
+    /// Unsubscribe from all events
+    UnsubscribeAll,
+
     /// Broadcast evidence
     BroadcastEvidence,
+
+    /// Broadcast shares proof (deprecated)
+    ProveShares,
+
+    /// Broadcast shares proof (v2)
+    ProveSharesV2,
+
+    /// Fetch signed block data
+    SignedBlock,
+
+    /// Fetch data commitment
+    DataCommitment,
+
+    /// Fetch tx status
+    TxStatus,
+
+    /// Fetch tx status batch
+    TxStatusBatch,
+
+    /// Dial seeds (unsafe)
+    DialSeeds,
+
+    /// Dial peers (unsafe)
+    DialPeers,
+
+    /// Flush mempool (unsafe)
+    UnsafeFlushMempool,
 }
 
 impl Method {
@@ -114,19 +156,33 @@ impl Method {
             Method::Commit => "commit",
             Method::ConsensusParams => "consensus_params",
             Method::ConsensusState => "consensus_state",
+            Method::DumpConsensusState => "dump_consensus_state",
             Method::DataRootInclusionProof => "data_root_inclusion_proof",
             Method::Genesis => "genesis",
+            Method::GenesisChunked => "genesis_chunked",
             Method::Header => "header",
             Method::HeaderByHash => "header_by_hash",
             Method::Health => "health",
             Method::NetInfo => "net_info",
+            Method::CheckTx => "check_tx",
+            Method::UnconfirmedTxs => "unconfirmed_txs",
+            Method::NumUnconfirmedTxs => "num_unconfirmed_txs",
             Method::ProveShares => "prove_shares",
+            Method::ProveSharesV2 => "prove_shares_v2",
             Method::Status => "status",
+            Method::SignedBlock => "signed_block",
+            Method::DataCommitment => "data_commitment",
             Method::Subscribe => "subscribe",
             Method::Tx => "tx",
             Method::TxSearch => "tx_search",
+            Method::TxStatus => "tx_status",
+            Method::TxStatusBatch => "tx_status_batch",
             Method::Unsubscribe => "unsubscribe",
+            Method::UnsubscribeAll => "unsubscribe_all",
             Method::Validators => "validators",
+            Method::DialSeeds => "dial_seeds",
+            Method::DialPeers => "dial_peers",
+            Method::UnsafeFlushMempool => "unsafe_flush_mempool",
         }
     }
 }
@@ -153,16 +209,30 @@ impl FromStr for Method {
             "consensus_params" => Method::ConsensusParams,
             "data_root_inclusion_proof" => Method::DataRootInclusionProof,
             "consensus_state" => Method::ConsensusState,
+            "dump_consensus_state" => Method::DumpConsensusState,
             "genesis" => Method::Genesis,
+            "genesis_chunked" => Method::GenesisChunked,
             "health" => Method::Health,
             "net_info" => Method::NetInfo,
+            "check_tx" => Method::CheckTx,
+            "unconfirmed_txs" => Method::UnconfirmedTxs,
+            "num_unconfirmed_txs" => Method::NumUnconfirmedTxs,
             "prove_shares" => Method::ProveShares,
+            "prove_shares_v2" => Method::ProveSharesV2,
             "status" => Method::Status,
+            "signed_block" => Method::SignedBlock,
+            "data_commitment" => Method::DataCommitment,
             "subscribe" => Method::Subscribe,
             "tx" => Method::Tx,
             "tx_search" => Method::TxSearch,
+            "tx_status" => Method::TxStatus,
+            "tx_status_batch" => Method::TxStatusBatch,
             "unsubscribe" => Method::Unsubscribe,
+            "unsubscribe_all" => Method::UnsubscribeAll,
             "validators" => Method::Validators,
+            "dial_seeds" => Method::DialSeeds,
+            "dial_peers" => Method::DialPeers,
+            "unsafe_flush_mempool" => Method::UnsafeFlushMempool,
             other => return Err(Error::method_not_found(other.to_string())),
         })
     }

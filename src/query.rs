@@ -26,7 +26,7 @@ use crate::{prelude::*, serializers::timestamp, Error};
 /// ### Direct construction of queries
 ///
 /// ```rust
-/// use tendermint_rpc::query::{Query, EventType};
+/// use celestia_core_rpc::query::{Query, EventType};
 ///
 /// let query = Query::from(EventType::NewBlock);
 /// assert_eq!("tm.event = 'NewBlock'", query.to_string());
@@ -41,7 +41,7 @@ use crate::{prelude::*, serializers::timestamp, Error};
 /// ### Query parsing
 ///
 /// ```rust
-/// use tendermint_rpc::query::{Query, EventType};
+/// use celestia_core_rpc::query::{Query, EventType};
 ///
 /// let query: Query = "tm.event = 'NewBlock'".parse().unwrap();
 /// assert_eq!(query, Query::from(EventType::NewBlock));
@@ -537,12 +537,12 @@ impl fmt::Display for Operand {
                 write!(f, "DATE ")?;
                 fmt_date(*d, f)?;
                 Ok(())
-            },
+            }
             Operand::DateTime(dt) => {
                 write!(f, "TIME ")?;
                 timestamp::fmt_as_rfc3339_nanos(*dt, f)?;
                 Ok(())
-            },
+            }
         }
     }
 }
@@ -885,10 +885,10 @@ mod test {
                 match op {
                     Operand::Float(f) => {
                         assert!(floats_eq(*f, core::f64::consts::PI, 5));
-                    },
+                    }
                     _ => panic!("unexpected operand: {:?}", op),
                 }
-            },
+            }
             c => panic!("unexpected condition: {:?}", c),
         }
 
@@ -904,10 +904,10 @@ mod test {
                 match op {
                     Operand::Float(f) => {
                         assert!(floats_eq(*f, -core::f64::consts::PI, 5));
-                    },
+                    }
                     _ => panic!("unexpected operand: {:?}", op),
                 }
-            },
+            }
             c => panic!("unexpected condition: {:?}", c),
         }
     }

@@ -1,1 +1,0 @@
-Returns an exception (undocumented, nondeterministic).

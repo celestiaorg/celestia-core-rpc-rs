@@ -2,7 +2,7 @@
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use celestia_core::abci;
+use tendermint::abci;
 
 pub use super::tx;
 use crate::{dialect::Dialect, prelude::*, request::RequestMessage, serializers, Method, Order};

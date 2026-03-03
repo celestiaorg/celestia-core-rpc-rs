@@ -2,8 +2,9 @@
 
 use alloc::collections::BTreeMap as HashMap;
 
-use celestia_core::{abci, Block};
+use celestia_types::block::Block;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use tendermint::abci;
 
 use crate::{dialect, prelude::*, query::EventType, response::Wrapper, serializers, Response};
 

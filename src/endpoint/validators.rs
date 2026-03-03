@@ -1,7 +1,7 @@
 //! `/validators` endpoint JSON-RPC wrapper
 
-use celestia_core::{block, validator};
 use serde::{Deserialize, Serialize};
+use tendermint::{block, validator};
 
 use crate::{
     dialect::Dialect, prelude::*, request::RequestMessage, serializers, PageNumber, PerPage,
@@ -69,6 +69,10 @@ pub struct Response {
     /// Validator list
     pub validators: Vec<validator::Info>,
 
+    /// Count of validators in this response
+    #[serde(default, with = "serializers::from_str")]
+    pub count: i32,
+
     /// Total number of validators for this block height.
     #[serde(with = "serializers::from_str")]
     pub total: i32,
@@ -79,9 +83,11 @@ impl crate::Response for Response {}
 impl Response {
     /// Constructor.
     pub fn new(block_height: block::Height, validators: Vec<validator::Info>, total: i32) -> Self {
+        let count = validators.len() as i32;
         Self {
             block_height,
             validators,
+            count,
             total,
         }
     }

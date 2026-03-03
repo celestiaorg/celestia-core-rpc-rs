@@ -1,1 +1,0 @@
-Undocumented, non-deterministic, was removed from Tendermint in 0.35.

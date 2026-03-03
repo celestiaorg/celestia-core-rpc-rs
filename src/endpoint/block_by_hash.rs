@@ -1,12 +1,10 @@
 //! `/block_by_hash` endpoint JSON-RPC wrapper
 
-use celestia_core::{
-    block::{self, Block},
-    Hash,
-};
+use celestia_types::block::Block;
 use serde::{Deserialize, Serialize};
+use tendermint::{block, Hash};
 
-use crate::{dialect::Dialect, request::RequestMessage};
+use crate::{dialect::Dialect, request::RequestMessage, serializers};
 
 /// Get information about a specific block by its hash
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
@@ -53,6 +51,7 @@ pub struct Response {
     pub block_id: block::Id,
 
     /// Block data
+    #[serde(default, with = "serializers::celestia_block::option")]
     pub block: Option<Block>,
 }
 

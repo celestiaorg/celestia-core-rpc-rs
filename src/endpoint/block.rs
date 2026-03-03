@@ -1,9 +1,10 @@
 //! `/block` endpoint JSON-RPC wrapper
 
-use celestia_core::block::{self, Block};
+use celestia_types::block::Block;
 use serde::{Deserialize, Serialize};
+use tendermint::block;
 
-use crate::{dialect::Dialect, request::RequestMessage};
+use crate::{dialect::Dialect, request::RequestMessage, serializers};
 
 /// Get information about a specific block
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
@@ -44,6 +45,7 @@ pub struct Response {
     pub block_id: block::Id,
 
     /// Block data
+    #[serde(with = "serializers::celestia_block")]
     pub block: Block,
 }
 

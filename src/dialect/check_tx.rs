@@ -1,7 +1,7 @@
 use bytes::Bytes;
 use serde::{Deserialize, Serialize};
 
-use celestia_core::abci::{self, Code};
+use tendermint::abci::{self, Code};
 
 use crate::prelude::*;
 use crate::serializers;
@@ -37,12 +37,15 @@ pub struct CheckTx<Ev> {
     /// The namespace for the `code`.
     pub codespace: String,
     /// The transaction's sender (e.g. the signer).
+    #[serde(default)]
     pub sender: String,
     /// The transaction's priority (for mempool ordering).
+    #[serde(default)]
     #[serde(with = "serializers::from_str")]
     pub priority: i64,
     /// mempool_error is set by Tendermint.
     /// ABCI applictions should not set mempool_error.
+    #[serde(default)]
     pub mempool_error: String,
 }
 

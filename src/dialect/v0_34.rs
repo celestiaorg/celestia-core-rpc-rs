@@ -1,5 +1,5 @@
-use celestia_core::{abci, evidence};
-use celestia_core_proto::v0_34::types::Evidence as RawEvidence;
+use tendermint::{abci, evidence};
+use tendermint_proto::v0_34::types::Evidence as RawEvidence;
 
 use crate::prelude::*;
 use crate::serializers::bytes::base64string;
@@ -61,20 +61,27 @@ pub struct EventAttribute {
 
 impl From<EventAttribute> for abci::EventAttribute {
     fn from(msg: EventAttribute) -> Self {
-        Self {
-            key: msg.key,
-            value: msg.value,
+        abci::EventAttribute::V034(abci::v0_34::EventAttribute {
+            key: msg.key.into_bytes(),
+            value: msg.value.into_bytes(),
             index: msg.index,
-        }
+        })
     }
 }
 
 impl From<abci::EventAttribute> for EventAttribute {
     fn from(msg: abci::EventAttribute) -> Self {
-        Self {
-            key: msg.key,
-            value: msg.value,
-            index: msg.index,
+        match msg {
+            abci::EventAttribute::V034(attr) => Self {
+                key: String::from_utf8_lossy(&attr.key).into_owned(),
+                value: String::from_utf8_lossy(&attr.value).into_owned(),
+                index: attr.index,
+            },
+            abci::EventAttribute::V037(attr) => Self {
+                key: attr.key,
+                value: attr.value,
+                index: attr.index,
+            },
         }
     }
 }

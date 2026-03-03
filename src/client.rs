@@ -1,5 +1,4 @@
 //! Tendermint RPC client.
-use std::println;
 mod compat;
 pub use compat::CompatMode;
 
@@ -27,7 +26,7 @@ pub use transport::mock::{MockClient, MockRequestMatcher, MockRequestMethodMatch
 use core::fmt;
 
 use async_trait::async_trait;
-use celestia_core::{abci, block::Height, evidence::Evidence, Genesis, Hash};
+use tendermint::{abci, block::Height, evidence::Evidence, Genesis, Hash};
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
@@ -78,10 +77,7 @@ pub trait Client {
     }
 
     /// `/block_by_hash`: get block by hash.
-    async fn block_by_hash(
-        &self,
-        hash: celestia_core::Hash,
-    ) -> Result<block_by_hash::Response, Error> {
+    async fn block_by_hash(&self, hash: Hash) -> Result<block_by_hash::Response, Error> {
         self.perform(block_by_hash::Request::new(hash)).await
     }
 
@@ -99,10 +95,7 @@ pub trait Client {
     }
 
     /// `/header_by_hash`: get block by hash.
-    async fn header_by_hash(
-        &self,
-        hash: celestia_core::Hash,
-    ) -> Result<header_by_hash::Response, Error> {
+    async fn header_by_hash(&self, hash: Hash) -> Result<header_by_hash::Response, Error> {
         self.perform(header_by_hash::Request::new(hash)).await
     }
 
@@ -195,6 +188,11 @@ pub trait Client {
         self.perform(consensus_state::Request::new()).await
     }
 
+    /// `/dump_consensus_state`: dump consensus state.
+    async fn dump_consensus_state(&self) -> Result<dump_consensus_state::Response, Error> {
+        self.perform(dump_consensus_state::Request).await
+    }
+
     // TODO(thane): Simplify once validators endpoint removes pagination.
     /// `/validators`: get validators a given height.
     async fn validators<H>(&self, height: H, paging: Paging) -> Result<validators::Response, Error>
@@ -270,6 +268,11 @@ pub trait Client {
         Ok(self.perform(genesis::Request::default()).await?.genesis)
     }
 
+    /// `/genesis_chunked`: get genesis file in chunks.
+    async fn genesis_chunked(&self, chunk: u32) -> Result<genesis_chunked::Response, Error> {
+        self.perform(genesis_chunked::Request::new(chunk)).await
+    }
+
     /// `/net_info`: obtain information about P2P and other network connections.
     async fn net_info(&self) -> Result<net_info::Response, Error> {
         self.perform(net_info::Request).await
@@ -284,6 +287,14 @@ pub trait Client {
     /// `/broadcast_evidence`: broadcast an evidence.
     async fn broadcast_evidence(&self, e: Evidence) -> Result<evidence::Response, Error> {
         self.perform(evidence::Request::new(e)).await
+    }
+
+    /// `/check_tx`: check a transaction without executing it.
+    async fn check_tx<T>(&self, tx: T) -> Result<check_tx::Response, Error>
+    where
+        T: Into<Vec<u8>> + Send,
+    {
+        self.perform(check_tx::Request::new(tx)).await
     }
 
     /// `/tx`: find transaction by hash.
@@ -304,6 +315,26 @@ pub trait Client {
             .await
     }
 
+    /// `/tx_status`: get the status of a transaction.
+    async fn tx_status(&self, hash: Hash) -> Result<tx_status::Response, Error> {
+        self.perform(tx_status::Request::new(hash)).await
+    }
+
+    /// `/tx_status_batch`: get statuses for multiple transactions.
+    async fn tx_status_batch(&self, hashes: Vec<Hash>) -> Result<tx_status_batch::Response, Error> {
+        self.perform(tx_status_batch::Request::new(hashes)).await
+    }
+
+    /// `/unconfirmed_txs`: get unconfirmed transactions.
+    async fn unconfirmed_txs(&self, limit: Option<i64>) -> Result<unconfirmed_txs::Response, Error> {
+        self.perform(unconfirmed_txs::Request::new(limit)).await
+    }
+
+    /// `/num_unconfirmed_txs`: get number of unconfirmed transactions.
+    async fn num_unconfirmed_txs(&self) -> Result<num_unconfirmed_txs::Response, Error> {
+        self.perform(num_unconfirmed_txs::Request).await
+    }
+
     async fn data_root_inclusion_proof(
         &self,
         height: u64,
@@ -314,18 +345,66 @@ pub trait Client {
             .await
     }
 
+    async fn data_commitment(
+        &self,
+        start: u64,
+        end: u64,
+    ) -> Result<data_commitment::Response, Error> {
+        self.perform(data_commitment::Request::new(start, end)).await
+    }
+
     async fn prove_shares(
         &self,
         height: u64,
         start_share: u64,
         end_share: u64,
     ) -> Result<prove_shares::Response, Error> {
-        let response = self
-            .perform(prove_shares::Request::new(height, start_share, end_share))
-            .await?;
-        println!("Shares Proof{:?}", response);
+        self.perform(prove_shares::Request::new(height, start_share, end_share))
+            .await
+    }
 
-        return Ok(response);
+    async fn prove_shares_v2(
+        &self,
+        height: u64,
+        start_share: u64,
+        end_share: u64,
+    ) -> Result<prove_shares_v2::Response, Error> {
+        self.perform(prove_shares_v2::Request::new(height, start_share, end_share))
+            .await
+    }
+
+    async fn signed_block<H>(&self, height: H) -> Result<signed_block::Response, Error>
+    where
+        H: Into<Height> + Send,
+    {
+        self.perform(signed_block::Request::new(height.into())).await
+    }
+
+    /// `/dial_seeds`: dial seeds (unsafe).
+    async fn dial_seeds(&self, seeds: Vec<String>) -> Result<dial_seeds::Response, Error> {
+        self.perform(dial_seeds::Request::new(seeds)).await
+    }
+
+    /// `/dial_peers`: dial peers (unsafe).
+    async fn dial_peers(
+        &self,
+        peers: Vec<String>,
+        persistent: bool,
+        unconditional: bool,
+        private: bool,
+    ) -> Result<dial_peers::Response, Error> {
+        self.perform(dial_peers::Request::new(
+            peers,
+            persistent,
+            unconditional,
+            private,
+        ))
+        .await
+    }
+
+    /// `/unsafe_flush_mempool`: flush the mempool (unsafe).
+    async fn unsafe_flush_mempool(&self) -> Result<unsafe_flush_mempool::Response, Error> {
+        self.perform(unsafe_flush_mempool::Request).await
     }
 
     #[cfg(any(feature = "http-client", feature = "websocket-client"))]

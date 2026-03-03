@@ -1,9 +1,9 @@
 //! `/header_by_hash` endpoint JSON-RPC wrapper
 
-use celestia_core::{block::Header, Hash};
 use serde::{Deserialize, Serialize};
+use tendermint::{block::Header, Hash};
 
-use crate::dialect::v0_34;
+use crate::dialect::{v0_34, v0_37, v0_38};
 use crate::request::RequestMessage;
 
 /// Get information about a specific block by its hash
@@ -40,7 +40,23 @@ impl crate::Request<v0_34::Dialect> for Request {
     type Response = Response;
 }
 
+impl crate::Request<v0_37::Dialect> for Request {
+    type Response = Response;
+}
+
+impl crate::Request<v0_38::Dialect> for Request {
+    type Response = Response;
+}
+
 impl crate::SimpleRequest<v0_34::Dialect> for Request {
+    type Output = Response;
+}
+
+impl crate::SimpleRequest<v0_37::Dialect> for Request {
+    type Output = Response;
+}
+
+impl crate::SimpleRequest<v0_38::Dialect> for Request {
     type Output = Response;
 }
 

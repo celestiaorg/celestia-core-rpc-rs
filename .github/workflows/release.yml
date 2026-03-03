@@ -51,3 +51,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*.tar.gz
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
